@@ -28,20 +28,20 @@ class WrapInWithDeletedConcernTest < ActionController::TestCase
 
   it "fetch deleted deploy" do
     deploy.soft_delete!
-    get :show, params: {project_id: project.id, id: deploy.id, test_route: true, with_deleted: true}
+    get :show, params: {project_id: project, id: deploy, test_route: true, with_deleted: "Project,Stage,Deploy"}
     response.body.must_equal 'Deploy'
   end
 
   it "fails without params" do
     deploy.soft_delete!
     assert_raises ActiveRecord::RecordNotFound do
-      get :show, params: {project_id: project.id, id: deploy.id, test_route: true}
+      get :show, params: {project_id: project, id: deploy, test_route: true}
     end
   end
 
   it "fetch deleted project" do
     project.soft_delete(validate: false)
-    get :project, params: {project_id: project.id, id: deploy.id, test_route: true, with_deleted: true}
+    get :project, params: {project_id: project, id: deploy, test_route: true, with_deleted: "Project,Stage,Deploy"}
     response.body.must_equal project.name
   end
 end
